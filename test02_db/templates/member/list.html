@@ -1,0 +1,32 @@
+<!-- templates/member/list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>member/list.html</title>
+</head>
+<body>
+    <div class="container">
+        <h1>회원목록</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>주소</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in members %}
+                <tr>
+                    <td>{{item.num}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.addr}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

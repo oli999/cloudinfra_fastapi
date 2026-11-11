@@ -11,12 +11,10 @@ engine = create_engine(DB_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # 글 목록기능 (post)
 CREATE_POST_TABLE = """
-    CREATE TABLE IF NOT EXISTS post(
+    CREATE TABLE IF NOT EXISTS member(
         num SERIAL PRIMARY KEY,
-        writer VARCHAR(50) NOT NULL,
-        title VARCHAR(100),
-        content TEXT,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        name VARCHAR(20) NOT NULL,
+        addr TEXT
     )
 """
 # DB 연결시 테이블이 없으면 만들기
