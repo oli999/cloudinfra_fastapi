@@ -93,3 +93,23 @@ def deleteMember(num: int, db: Session = Depends(get_db)):
     # 웹브라우저는 말을 잘 듣기 때문에 강요하는대로 "/member" 경로로 요청을 다시한다
     # 결과적으로 삭제후에 /member 페이지를 새로고침 하는 효과가 된다.
     return RedirectResponse("/member", status_code=302)
+
+@app.get("/member/edit/{num}")
+def memberEditForm(req: Request, num :int, db: Session = Depends(get_db)):
+    # 수정할 회원의 정보를 읽어오기 위한 query
+    query = text("""
+        SELECT num, name, addr
+        FROM member
+        WHERE num=:num
+    """)
+    # select 되는 row 가 최대 1개 이기 때문에 .fetchall() 이 아닌 .fetchone() 을 호출한다 
+    # 리턴되는것은 dict 라고 생각하고 사용하면 된다.
+    row = db.execute(query, {"num":num}).fetchone()
+    # 수정폼을 응답한다
+    return templates.TemplateResponse(
+        request=req,
+        name="member/edit.html",
+        context={
+            "row":row
+        }
+    )
