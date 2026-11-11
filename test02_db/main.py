@@ -45,4 +45,10 @@ def getMembers(req: Request, db: Session = Depends(get_db)):
             "members":members
         }
     )
-    
+
+@app.get("/member/new", response_class=HTMLResponse)
+def memberNew(req: Request):
+    return templates.TemplateResponse(
+        request=req, 
+        name="member/new.html"
+    )
