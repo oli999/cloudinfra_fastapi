@@ -1,5 +1,5 @@
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
@@ -47,8 +47,29 @@ def getMembers(req: Request, db: Session = Depends(get_db)):
     )
 
 @app.get("/member/new", response_class=HTMLResponse)
-def memberNew(req: Request):
+def memberNewForm(req: Request):
     return templates.TemplateResponse(
         request=req, 
         name="member/new.html"
+    )
+
+@app.post("/member/new", response_class=HTMLResponse)
+def memberNew(req: Request, name: str = Form(...), addr: str = Form(...), db: Session = Depends(get_db) ):
+    query = text("""
+        INSERT INTO member
+        (name, addr)
+        VALUES(:name, :addr )
+    """)
+    # query 문을 실행하면서 같이 전달한 dict 의 키값과  :name , :addr 동일한 위치에 값이 바인딩되어서 실행된다.
+    db.execute(query, {"name":name, "addr":addr})
+    # insert, update, delete 문은 commit() 을 호출해야 실제로 DB 에 반영된다.
+    db.commit() 
+    # 응답하기
+    return templates.TemplateResponse(
+        request=req,
+        name="member/alert.html",
+        context={
+            "msg":f"{name} 님의 정보를 저장했습니다",
+            "url":"/member"
+        }
     )
