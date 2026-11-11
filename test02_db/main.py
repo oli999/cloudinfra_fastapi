@@ -1,6 +1,8 @@
 
+from webbrowser import get
+
 from fastapi import Depends, FastAPI, Form, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
 
@@ -73,3 +75,21 @@ def memberNew(req: Request, name: str = Form(...), addr: str = Form(...), db: Se
             "url":"/member"
         }
     )
+
+
+@app.get("/member/delete/{num}") # 전달되는 마지막 경로의 값을 num 이라는 변수에 담겠다는 의미
+def deleteMember(num: int, db: Session = Depends(get_db)):
+    query = text("""
+        DELETE FROM member
+        WHERE num=:num
+    """)
+    # 삭제할 회원의 번호를 dict 에 "num" 이라는 키값으로 전달하면  :num 위치에 바인딩 되어서 실행된다.
+    db.execute(query, {"num":num})
+    # commit() 을 호출해야 실제 반영된다.
+    db.commit()
+
+    # 응답하기
+    # 리다일렉트 응답은 웹브라우저에게 새로운 경로로 다시 요청을 하라고 강요하는 응답이다
+    # 웹브라우저는 말을 잘 듣기 때문에 강요하는대로 "/member" 경로로 요청을 다시한다
+    # 결과적으로 삭제후에 /member 페이지를 새로고침 하는 효과가 된다.
+    return RedirectResponse("/member", status_code=302)

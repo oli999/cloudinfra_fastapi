@@ -16,6 +16,7 @@
                     <th>번호</th>
                     <th>이름</th>
                     <th>주소</th>
+                    <th>삭제</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,9 @@
                     <td>{{item.num}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.addr}}</td>
+                    <td>
+                        <a href="/member/delete/{{item.num}}">삭제</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
