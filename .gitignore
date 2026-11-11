@@ -14,3 +14,6 @@ __pycache__/
 # 에디터 및 IDE 설정 파일
 .vscode/
 .idea/
+
+# 로그파일 무시
+*.log
