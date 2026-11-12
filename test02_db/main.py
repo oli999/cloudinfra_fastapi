@@ -113,3 +113,22 @@ def memberEditForm(req: Request, num :int, db: Session = Depends(get_db)):
             "row":row
         }
     )
+
+@app.post("/member/edit/{num}")
+def memberEdit(req: Request, num: int, name: str = Form(...), addr: str = Form(...), db: Session = Depends(get_db)):
+    query = text("""
+        UPDATE member
+        SET name=:name, addr=:addr
+        WHERE num=:num
+    """)
+    db.execute(query, {"num":num, "name":name, "addr":addr})
+    db.commit()
+    # 응답
+    return templates.TemplateResponse(
+        request=req,
+        name="member/alert.html",
+        context={
+            "msg":f"{name} 님의 정보를 수정했습니다!",
+            "url":"/member"
+        }
+    )
